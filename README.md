@@ -38,7 +38,7 @@ Log into Owlite.
 	Enter yout password:
 
 After successful login, the following message will be displayed.
-		w
+		
 	OwLite [INFO] Logged in as <user>
 	OwLite [INFO] Your price plan: <PLAN TYPE>
 	OwLite [INFO] Your workgroup: <workgroup>
