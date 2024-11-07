@@ -28,9 +28,9 @@ First clone this repository and it's included submodules.
 
 Start up a docker instance using the provided `compose.yaml`.
 
-	UUID="$(id -u)" UGID="$(id -g)" docker compose run --rm owlite
+	./start_owlite
 
-Log into Owlite.
+Log into Owlite. An account can be created at [owlite.ai](https://owlite.ai/auth/register).
 
 	owlite login
 
@@ -43,6 +43,8 @@ After successful login, the following message will be displayed.
 	OwLite [INFO] Your price plan: <PLAN TYPE>
 	OwLite [INFO] Your workgroup: <workgroup>
 	OwLite [INFO] Your authentication token is saved at /home/owlet/.cache/owlite/tokens
+
+Head over to the [introduction](introduction/README.md) to begin using OwLite with ResNet18.
 
 ## Available Tasks
 - [Image classification](image-classification/README.md)
