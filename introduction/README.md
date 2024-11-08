@@ -18,7 +18,7 @@ This guide gives a detailed introduction to the basics of OwLite and it's capabi
 
         import owlite
 
-        owl = owlite.init(project="Introduction", baseline="resnet18")
+        owl = owlite.init(project="Introduction", baseline="resnet18", experiment=experiment)
 
         dummy_input = torch.randn(batch_size, 3, 224, 224)
         model = owl.convert(model, dummy_input)
@@ -91,21 +91,21 @@ ImageNet validation dataset is used to test ResNet18 for validation, [torchvisio
 15. First let's load the ImageNet dataset using PyTorch and apply the recommend image transforms.
 
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
+                                         std=[0.229, 0.224, 0.225])
         transforms = transforms.Compose([transforms.Resize(256),
                                         transforms.CenterCrop(224),
                                         transforms.ToTensor(),
                                         normalize])
 
         val_dataset = ImageNet(root='./data', 
-                        split='val',
-                        transform=transforms)
+                               split='val',
+                               transform=transforms)
 
         val_loader = torch.utils.data.DataLoader(val_dataset,
-                                                batch_size=256,
-                                                shuffle=False,
-                                                num_workers=4,
-                                                pin_memory=True)
+                                                 batch_size=256,
+                                                 shuffle=False,
+                                                 num_workers=4,
+                                                 pin_memory=True)
 
 16. The next step is to set up the PyTorch validation loop and accuracy calculation, [top K accuracy code from PyTorch](https://github.com/pytorch/examples/blob/main/imagenet/main.py).
 
