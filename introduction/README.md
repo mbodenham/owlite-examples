@@ -1,9 +1,9 @@
-# Introduction
+# Introduction To OwLite
 
-This guide provides an introduction to the basics of OwLite and it's capabilities. In this introduction ResNet18 for image classification is used as an example but the same principles can be applied to other models and tasks. Complete code can be found in `introduction.py`.
+This guide gives a detailed introduction to the basics of OwLite and it's capabilities. [ResNet18](https://arxiv.org/abs/1512.03385) for image classification is used as an example, but the same principles can be applied to other models and tasks. Complete code can be found in `introduction.py`.
 
 
-1. Firstly code is set up using standard pytorch code. Here let's load the ResNet18 model using the [torchvision library](https://pytorch.org/vision/main/models/generated/torchvision.models.resnet18.html).
+1. Firstly, code is set up using standard PyTorch code. Here let's load ResNet18 model using the [torchvision library](https://pytorch.org/vision/main/models/generated/torchvision.models.resnet18.html) with the default ImageNet trained weights.
 
         import torch
         from torchvision.models import resnet18
@@ -20,7 +20,6 @@ This guide provides an introduction to the basics of OwLite and it's capabilitie
 
         owl = owlite.init(project="Introduction", baseline="resnet18")
 
-        # Wrap model with owlite.convert
         dummy_input = torch.randn(batch_size, 3, 224, 224)
         model = owl.convert(model, dummy_input)
 
@@ -29,34 +28,34 @@ This guide provides an introduction to the basics of OwLite and it's capabilitie
 
 
 
-3. The code can now be run inside the provided docker container.
+3. The code can now be run inside the provided docker container. Instruction to setup the container can be found [here](../README.md).
 
         ./start_owlite
         cd introduction/ && python introduction.py
 
-4. After completion benchmarking information will be displayed.
+4. After completion benchmarking information will be displayed, along with other useful process information.
 
        OwLite [INFO] Baseline: resnet18
               Latency: 2.94397 (ms) on NVIDIA RTX A6000
-              For more details, visit https://owlite.ai/project/detail/672bf5dc0bebf7120a583076
+              For more details, visit https://owlite.ai/project/detail/2ceca669a6a29b27884a97ab
 
-5. Following the link provided by OwLite allows for the results of the resnet18 model to be viewed.
+5. Following the link provided by OwLite output allows for the results of the ResNet18 model to be viewed.
 
 ![OwLite dashboard](./images/owlite_dash_1.webp "OwLite Dashboard")
 
-6. Clicking on the orange ⊕ in the resnet18 row will allow us to begin a quantization experiment. Input a name for the experiment and click Enter.
+6. Clicking on the orange ⊕ at the end of the ResNet18 row allows us create a quantization experiment. Input `first_quantization` for the experiment name and click Enter.
 
 ![Creating an experiment](./images/owlite_dash_create_exp.webp "Creating an experiment")
 
-7. The next page shows an overview of the models architecture. Here the quantization setting of each layer can be adjusted, but lets leave everything at the recommended settings for this introduction.
+7. The next page shows an overview of the models architecture. Here the quantization setting of each layer can be adjusted, but lets use the recommended settings for this introduction.
 
 ![Model overview](./images/owlite_model_view.webp "Model overview")
 
-8. Let's quantize the model using the recommended setting. Go Tools -> Recommended setting.
+8. To quantize the model using the recommended setting; Go Tools → Recommended setting.
 
 ![Model tools](./images/owlite_model_tools.webp "Model tools")
 
-9. Confirm the choice by clicking TRUST ME!
+9. Confirm by clicking TRUST ME!
 
 ![Model recommended](./images/owlite_model_recommended.webp "Model recommended")
 
@@ -70,26 +69,26 @@ This guide provides an introduction to the basics of OwLite and it's capabilitie
 
 12. Let's add the experiment to `introduction.py` by updating the `owlite.init` function.
 
-        owl = owlite.init(project="Introduction", baseline="resnet18", experiment="first_quantization")
+        experimnet = "first_quantization"
 
 13. Run the experiment.
 
         python introduction.py
 
-14. After the code has ran the results of the quantization experiment can be seen on the owlite dashboard.
+14. After the code has completed, the results of the quantization experiment can be seen on the OwLite dashboard.
 
 ![Owlite dashboard results](./images/owlite_dashboard_results.webp "Owlite dashboard results")
 
-15. The recommended setting produce a **73% reduction in memory** and **2.3x speed up in inference latency**. This introduction does not include an accuracy metric.
+The recommended setting produce a **73% reduction in memory** and **2.3x speed up in inference latency**. Up to this point the models accuracy has not be considered.
 
 ## Testing Accuracy With Post Training Quantization (PTQ)
 
-To be sure the model still performs as expected in accuracy we must add few more lines of code to evaluate the model.
+With a few more lines of OwLite code we can test the model's accuracy to be sure the model is still effective at performing its task.
 
-ImageNet validation dataset is need to test ResNet18 for validation, [torchvision.datasets.ImageNet](https://pytorch.org/vision/main/generated/torchvision.datasets.ImageNet.html#torchvision.datasets.ImageNet). Files from the ImageNet 2012 dataset from the [official website](https://image-net.org/challenges/LSVRC/2012/2012-downloads.php), `ILSVRC2012_devkit_t12.tar.gz` and `ILSVRC2012_img_val.tar` are required for validation. See [data folder](data/README.md) for downloading the files. The complete validation code can be found in `validate.py`.
+ImageNet validation dataset is used to test ResNet18 for validation, [torchvision.datasets.ImageNet](https://pytorch.org/vision/main/generated/torchvision.datasets.ImageNet.html#torchvision.datasets.ImageNet). Files from the ImageNet 2012 dataset from the [official website](https://image-net.org/challenges/LSVRC/2012/2012-downloads.php), `ILSVRC2012_devkit_t12.tar.gz` and `ILSVRC2012_img_val.tar` are required for validation. See the [data folder](data/README.md) for instruction on preparing the files. The complete validation code can be found in `validate.py`.
 
 
-16. First let's load the ImageNet dataset using PyTorch and apply the recommend image transforms.
+15. First let's load the ImageNet dataset using PyTorch and apply the recommend image transforms.
 
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
@@ -108,7 +107,7 @@ ImageNet validation dataset is need to test ResNet18 for validation, [torchvisio
                                                 num_workers=4,
                                                 pin_memory=True)
 
-17. The next step is to set up the validation loop and accuracy calculation, [topk code is from pytorch](https://github.com/pytorch/examples/blob/main/imagenet/main.py).
+16. The next step is to set up the PyTorch validation loop and accuracy calculation, [top K accuracy code from PyTorch](https://github.com/pytorch/examples/blob/main/imagenet/main.py).
 
         def accuracy(output, target, topk=(1,)): # https://github.com/pytorch/examples/blob/main/imagenet/main.py
                 """Computes the accuracy over the k top predictions for the specified values of k"""
@@ -138,36 +137,36 @@ ImageNet validation dataset is need to test ResNet18 for validation, [torchvisio
         return float(np.array(avg_top1).mean())
 
 
-18. Now with the validation code we can use `owlite.log(accuracy=<value>)` to save accuracies in the OwLite dashboard. [More info](https://squeezebits.gitbook.io/owlite/python-api/owlite.owlite.owlite/owlite.owlite.log).
+17. Now with this validation code we can use `owlite.log(accuracy=<value>)` to save accuracies in the OwLite dashboard. [More info](https://squeezebits.gitbook.io/owlite/python-api/owlite.owlite.owlite/owlite.owlite.log).
 
         owl.log(accuracy=validate(model, val_loader)) # Add accuracy to OwLite dashboard
 
-19. After running the code the accuracies can be add to the OwLite dashboard by clicking the orange ⊕ in the column headings.
+18. After running the code, the accuracies can be add to the OwLite dashboard by clicking the orange ⊕ in the column headings.
 
 
 ![OwLite dashboard validation](./images/owlite_dashboard_validate.webp "OwLite dashboard validation")
 
-20. Here we can select the store accuracy metric. For ImageNet higher is better.
+19. Here we can select the accuracy metric, for ImageNet higher is better.
 
 ![OwLite dashboard select metric](./images/owlite_dashboard_metric_selected.webp "OwLite dashboard select metric")
 
-21. Now the model accuracies are displayed on the dashboard.
+20. Now the model accuracies are displayed on the dashboard.
 
 ![OwLite dashboard with accuracies](./images/owlite_dashboard_with_accuracy.webp "OwLite dashboard with accuracies")
 
 
-22. The quantized model weight must be calibrated by passing through some training examples the model using `with owlite.calibrate(model) as calibrate_model:`. [More info](https://squeezebits.gitbook.io/owlite/python-api/owlite.calibrators#function-calibrate).
+21. The quantized model weights must be calibrated by passing through some training examples to the model using `with owlite.calibrate(model) as calibrate_model:`. [More info](https://squeezebits.gitbook.io/owlite/python-api/owlite.calibrators#function-calibrate).
 
 
         with owlite.calibrate(model) as calibrate_model:
                 for images, _ in val_loader:
                         calibrate_model(images.to(device))
-                        break
+                        break # One batch is sufficient
 
-23. An experimental model can now be created by repeating steps 6 to 12. Once the code has completed the results can be compared in the dashboard.
+22. An experimental model can now be created by repeating steps 6 to 12. Once the code has completed, the results can be compared in the dashboard.
 
 ![OwLite dashboard with validation results](./images/owlite_dashboard_validation_results.webp "OwLite dashboard validation results")
 
-24. The recommended setting produce a **48% reduction in memory** and **2.2x speed up in inference latency** with only a marginal loss is accuracy (<0.5%).
+23. The recommended setting produce a **48% reduction in memory** and **2.2x speed up in inference latency** with only a marginal loss is accuracy (<0.5%).
 
 This introduction covers the basic of getting started with OwLite. More advanced examples can be found in this repository.
