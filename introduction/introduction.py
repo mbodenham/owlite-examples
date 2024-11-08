@@ -8,15 +8,16 @@ model = resnet18(weights="DEFAULT")
 model.to(device)
 print(f"[INFO] ResNet18 Loaded to {device}")
 
-dummy_input = torch.randn(64, 3, 224, 224)
 
 # Analyze ResNet18 with OwLite wrapper
 import owlite
 
-owl = owlite.init(project="Introduction", baseline="resnet18")
-# owl = owlite.init(project="Introduction", baseline="resnet18", experiment="first_quantization")
+experiment = None
+# experimnet = "first_quantization"
+owl = owlite.init(project="Introduction", baseline="resnet18_val", experiment=experiment)
 
-# Wrap model with owlite convert
+# Wrap model with owlite convert and provide a dummy input
+dummy_input = torch.randn(64, 3, 224, 224)
 model = owl.convert(model, dummy_input)
 
 owl.export(model) # Export model to ONNX
