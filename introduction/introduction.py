@@ -13,8 +13,8 @@ print(f"[INFO] ResNet18 Loaded to {device}")
 import owlite
 
 experiment = None
-experimnet = "first_quantization"
-# owl = owlite.init(project="Introduction", baseline="resnet18_val", experiment=experiment)
+# experimnet = "first_quantization"
+owl = owlite.init(project="Introduction", baseline="resnet18_val", experiment=experiment)
 
 # Wrap model with OwLite convert and provide a dummy input
 dummy_input = torch.randn(64, 3, 224, 224)
